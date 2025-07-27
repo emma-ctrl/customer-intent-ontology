@@ -1,0 +1,44 @@
+AI Engineer — Take Home Task
+Interview
+Our problem
+We have just onboarded a new customer, called BrownBox 🎉
+Before we turn on our AI agent for BrownBox, we want to categorise the
+conversations into a set of customer intents. This will give us a high level
+understanding of the reasons customers are contacting BrownBox, as well as give
+us a lever to control which conversations we want our AI agent to participate in.
+For example, we may not want to participate in any conversations related to fraud!
+Dataset
+You can find BrownBox’s customer support conversations here. You will need to
+create a (free) huggingface account to be able to download the dataset.
+For the challenge you should only use the conversation column, as we would not
+have access to any of the other dataset columns in real life.
+ℹ Note
+This is a fictional dataset built using GPT3.5.
+This means the conversations are not very realistic, they are very simple and
+very clean, which doesn’t make them very representative of the real world, but
+it’s a starting point!
+The Challenge
+Part #1
+AI Engineer — Take Home Task Interview 1
+We would like you to build a customer intent ontology for BrownBox. There are no
+constraints on how you construct the ontology, these are up to you to define as
+you wish! However we would love for you to explicitly define any assumptions or
+constraints you set and talk us through your thinking.
+ℹ Note 1:
+The purpose of the customer intent ontology is to allow us to use specialised AI
+agents that have been purpose-built for individual customer intents. For example
+the customer intent “Initiate Return” will be handled by a different AI agent,
+compared to the “Cancel Order” customer intent.
+ℹ Note 2:
+We cannot rely on external stakeholders to advise us on how to structure,
+optimise, or maintain this customer intent ontology - all decisions have to be made
+by us.
+Part #2
+We’d like you to define an evaluation mechanism for this ontology. How do we
+know if it is good enough, and how would we know when to stop iterating?
+ℹ Note 1: We cannot use the issue_area , issue_category , issue_subcategory columns
+from the dataset, as we would not have those in real life 🙂.
+ℹ Note 2: Customer intent ontologies will change over time as companies evolve.
+We’d like for you to think how we would maintain the ontology over time,
+deprecate intents or add new intents.
+Good luck! ❤

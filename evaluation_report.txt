@@ -1,0 +1,59 @@
+Ontology Evaluation Report
+==================================================
+
+Basic Metrics
+--------------------
+Total conversations: 472
+Average confidence: 0.948
+Category reuse rate: 0.992
+Low confidence rate: 0.000
+Total categories: 13
+Threshold assessment: Passed thresholds
+
+Intent Distribution
+--------------------
+return_process_inquiries: 82
+account_access_issues: 63
+product_quality_concerns: 52
+delivery_problems: 50
+billing_discrepancies: 48
+warranty_terms_inquiries: 47
+order_status_uncertainty: 45
+product_availability_inquiries: 35
+order_cancellation_request: 13
+pickup_process_inquiries: 11
+address_update_request: 10
+installation_support_request: 8
+loyalty_program_inquiries: 8
+
+Cluster Consistency Analysis
+------------------------------
+Average consistency rate: 0.437
+Inconsistent clusters: 5/5
+Cluster 0: 0.238 consistency
+  Dominant intent: order_status_uncertainty
+  Mixed intents: ['delivery_problems', 'billing_discrepancies', 'order_status_uncertainty', 'return_process_inquiries', 'product_availability_inquiries', 'warranty_terms_inquiries', 'product_quality_concerns', 'account_access_issues', 'pickup_process_inquiries', 'order_cancellation_request', 'installation_support_request', 'loyalty_program_inquiries']
+Cluster 1: 0.537 consistency
+  Dominant intent: account_access_issues
+  Mixed intents: ['account_access_issues', 'order_status_uncertainty', 'delivery_problems', 'product_quality_concerns', 'product_availability_inquiries', 'return_process_inquiries', 'address_update_request', 'order_cancellation_request', 'warranty_terms_inquiries', 'billing_discrepancies']
+Cluster 2: 0.294 consistency
+  Dominant intent: account_access_issues
+  Mixed intents: ['installation_support_request', 'delivery_problems', 'product_quality_concerns', 'pickup_process_inquiries', 'account_access_issues', 'billing_discrepancies', 'address_update_request', 'loyalty_program_inquiries', 'order_cancellation_request', 'product_availability_inquiries', 'warranty_terms_inquiries', 'return_process_inquiries', 'order_status_uncertainty']
+Cluster 3: 0.488 consistency
+  Dominant intent: return_process_inquiries
+  Mixed intents: ['return_process_inquiries', 'product_quality_concerns', 'order_cancellation_request', 'product_availability_inquiries', 'billing_discrepancies', 'delivery_problems', 'account_access_issues', 'warranty_terms_inquiries', 'order_status_uncertainty']
+Cluster 4: 0.627 consistency
+  Dominant intent: warranty_terms_inquiries
+  Mixed intents: ['delivery_problems', 'warranty_terms_inquiries', 'address_update_request', 'installation_support_request', 'order_status_uncertainty', 'product_quality_concerns', 'return_process_inquiries', 'account_access_issues', 'billing_discrepancies', 'loyalty_program_inquiries']
+
+Classification Margin Analysis
+-----------------------------------
+Average margin: 0.286
+Low margin rate: 0.608
+
+Uncertain classifications:
+  conv_003: delivery_problems (margin: 0.200)
+  conv_006: delivery_problems (margin: 0.000)
+  conv_007: product_quality_concerns (margin: 0.000)
+  conv_008: billing_discrepancies (margin: 0.000)
+  conv_011: delivery_problems (margin: 0.000)

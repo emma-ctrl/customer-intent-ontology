@@ -40,6 +40,44 @@ class IntentOntologist:
             print(f"Error: Could not find file {self.conversations_file}")
             return []
 
+    def classify_intent_with_scores(self, conversation_id: str, conversation: str) -> tuple:
+        """Classify intent and return all category scores for margin analysis"""
+        existing_categories = self.ontology.get_category_names()
+        
+        if not existing_categories:
+            # No existing categories, use regular classification
+            classification = self.classify_intent(conversation_id, conversation)
+            return classification, {}
+        
+        # Get scores for all existing categories
+        category_scores = {}
+        for category in existing_categories:
+            score_prompt = f"""Rate how well this conversation fits the category "{category}" on a scale of 0.0 to 1.0.
+            
+Category: {category}
+Description: {self.ontology.get_category(category).description if self.ontology.get_category(category) else ""}
+
+Conversation: {conversation[:500]}
+
+Return only a number between 0.0 and 1.0"""
+            
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[{"role": "user", "content": score_prompt}],
+                    max_tokens=10,
+                    temperature=0.1
+                )
+                score = float(response.choices[0].message.content.strip())
+                category_scores[category] = max(0.0, min(1.0, score))  # Clamp to 0-1
+            except:
+                category_scores[category] = 0.0
+        
+        # Get regular classification
+        classification = self.classify_intent(conversation_id, conversation)
+        
+        return classification, category_scores
+    
     def classify_intent(self, conversation_id: str, conversation: str) -> IntentClassification:
         """Classify customer intent based on their fundamental need"""
         existing_categories = self.ontology.get_category_names()
@@ -135,12 +173,15 @@ Rules:
                 self.process_classification(classification, conversation)
 
     def build_ontology(self) -> List[IntentClassification]:
-        """Main process: load conversations and build ontology"""
+        """Main process: load conversations and build ontology with evaluation tracking"""
         conversations = self.load_conversations_from_file()
         if not conversations:
             return []
         
         results = []
+        confidence_scores = []
+        reuse_count = 0
+        
         print(f"\nProcessing {len(conversations)} conversations...")
         print("-" * 50)
         
@@ -150,6 +191,42 @@ Rules:
             classification = self.classify_intent(conv['id'], conv['conversation'])
             self.process_classification(classification, conv['conversation'])
             results.append(classification)
+            
+            # Track evaluation metrics
+            confidence_scores.append(classification.confidence)
+            if classification.action == IntentAction.USE_EXISTING:
+                reuse_count += 1
+            
+            # Print evaluation every 100 conversations
+            if i % 100 == 0:
+                avg_confidence = sum(confidence_scores[-100:]) / 100
+                reuse_rate = reuse_count / i
+                print(f"\nAfter {i} conversations: avg_confidence={avg_confidence:.3f}, reuse_rate={reuse_rate:.3f}")
+                print("-" * 50)
+        
+        # Final evaluation metrics
+        avg_confidence = sum(confidence_scores) / len(confidence_scores)
+        reuse_rate = reuse_count / len(conversations)
+        low_confidence_count = sum(1 for score in confidence_scores if score < 0.6)
+        low_confidence_rate = low_confidence_count / len(conversations)
+        
+        print(f"\nFinal Evaluation Metrics")
+        print("-" * 30)
+        print(f"Total conversations processed: {len(conversations)}")
+        print(f"Average confidence: {avg_confidence:.3f}")
+        print(f"Category reuse rate: {reuse_rate:.3f}")
+        print(f"Low confidence rate (<0.6): {low_confidence_rate:.3f}")
+        print(f"Total categories created: {len(self.ontology.categories)}")
+        
+        # Passes Thresholds
+        thresholds = (
+            avg_confidence >= 0.9 and 
+            reuse_rate >= 0.9 and 
+            low_confidence_rate <= 0.1
+        )
+        
+        status = "Passed thresholds" if thresholds else "failed thresholds"
+        print(status)
         
         return results
 
