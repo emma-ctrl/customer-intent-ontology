@@ -1,0 +1,136 @@
+Cross-Validation Analysis Report
+==================================================
+
+Intent Stability Analysis
+------------------------------
+Total unique intents across all splits: 96
+Common intents (appear in all splits): 4
+Stability score: 0.104
+Average intents per split: 38.3
+Split intent counts: [45, 36, 34]
+
+Stable intents (all splits):
+  - account_access_issues
+  - exchange_offer_inquiry
+  - loyalty_program_inquiry
+  - product_return_request
+
+Intent frequency across splits:
+  product_return_request: 3/3 splits
+  account_access_issues: 3/3 splits
+  exchange_offer_inquiry: 3/3 splits
+  loyalty_program_inquiry: 3/3 splits
+  billing_discrepancy_resolution: 2/3 splits
+  product_installation_support: 2/3 splits
+  product_pricing_inquiry: 2/3 splits
+  extended_warranty_inquiry: 2/3 splits
+  order_cancellation_request: 2/3 splits
+  product_availability_inquiry: 2/3 splits
+  warranty_claim_process: 2/3 splits
+  warranty_terms_inquiry: 2/3 splits
+  delivery_issue_resolution: 2/3 splits
+  order_status_inquiry: 2/3 splits
+  account_reactivation_request: 2/3 splits
+  pickup_process_inquiry: 1/3 splits
+  courier_service_issue: 1/3 splits
+  order_delivery_inquiry: 1/3 splits
+  account_verification_issues: 1/3 splits
+  product_replacement_request: 1/3 splits
+  refund_request_for_missing_delivery: 1/3 splits
+  order_pickup_address_change: 1/3 splits
+  account_reactivation_issue: 1/3 splits
+  order_delivery_issue: 1/3 splits
+  delivery_policy_inquiry: 1/3 splits
+  account_update_request: 1/3 splits
+  order_misdelivery_issue: 1/3 splits
+  account_signup_issues: 1/3 splits
+  cashback_offer_inquiry: 1/3 splits
+  invoice_request_issue: 1/3 splits
+  invoice_discrepancy_resolution: 1/3 splits
+  order_placement_assistance: 1/3 splits
+  expedited_delivery_inquiry: 1/3 splits
+  refund_request_for_cash_on_delivery: 1/3 splits
+  refund_request_for_canceled_order: 1/3 splits
+  product_repair_dispute: 1/3 splits
+  product_exchange_request: 1/3 splits
+  product_warranty_inquiry: 1/3 splits
+  warranty_discrepancy_resolution: 1/3 splits
+  otp_verification_issue: 1/3 splits
+  product_return_process: 1/3 splits
+  hidden_charges_inquiry: 1/3 splits
+  product_repair_support: 1/3 splits
+  warranty_inquiry: 1/3 splits
+  invoice_request_and_duplicate_charge_issue: 1/3 splits
+  account_deactivation_and_refund_request: 1/3 splits
+  order_tracking_issue: 1/3 splits
+  refund_request_for_defective_product: 1/3 splits
+  refund_request_for_delayed_processing: 1/3 splits
+  return_process_cancellation: 1/3 splits
+  order_tracking_issues: 1/3 splits
+  pickup_address_change_request: 1/3 splits
+  order_placement_request: 1/3 splits
+  warranty_claim_inquiry: 1/3 splits
+  delivery_option_inquiry: 1/3 splits
+  refund_status_inquiry: 1/3 splits
+  product_discount_inquiry: 1/3 splits
+  payment_mode_inquiry: 1/3 splits
+  account_creation_assistance: 1/3 splits
+  product_return_resolution: 1/3 splits
+  product_issue_resolution: 1/3 splits
+  refund_request: 1/3 splits
+  pickup_location_change_request: 1/3 splits
+  product_availability_issues: 1/3 splits
+  account_deactivation_requests: 1/3 splits
+  combined_delivery_inquiry: 1/3 splits
+  invoice_retrieval_issues: 1/3 splits
+  installation_service_inquiry: 1/3 splits
+  address_management_inquiry: 1/3 splits
+  order_issue_resolution: 1/3 splits
+  delivery_process_inquiry: 1/3 splits
+  account_verification_assistance: 1/3 splits
+  refund_fee_inquiry: 1/3 splits
+  refund_processing_issues: 1/3 splits
+  return_and_refund_request: 1/3 splits
+  warranty_discrepancy_inquiry: 1/3 splits
+  international_signup_issues: 1/3 splits
+  invoice_generation_issue: 1/3 splits
+  reward_points_redemption_issue: 1/3 splits
+  international_shipping_inquiry: 1/3 splits
+  account_reactivation_and_service_request: 1/3 splits
+  otp_verification_issues: 1/3 splits
+  corporate_email_signup_issues: 1/3 splits
+  shipping_policy_inquiry: 1/3 splits
+  order_modification_request: 1/3 splits
+  payment_option_inquiry: 1/3 splits
+  mobile_app_login_support: 1/3 splits
+  instant_cashback_inquiry: 1/3 splits
+  return_policy_exceptions: 1/3 splits
+  payment_gateway_issues: 1/3 splits
+  account_email_update_request: 1/3 splits
+  return_and_replacement_request: 1/3 splits
+  return_or_exchange_request: 1/3 splits
+  price_adjustment_request: 1/3 splits
+  extended_warranty_request: 1/3 splits
+  perishable_item_shipping_inquiry: 1/3 splits
+
+Volume Correlation Analysis
+------------------------------
+Average Spearman correlation: 0.345
+
+Pairwise correlations:
+  Splits 1-2: r=0.738 (p=0.037)
+  Splits 1-3: r=0.107 (p=0.819)
+  Splits 2-3: r=0.190 (p=0.651)
+
+Intent Name Consistency Analysis
+-----------------------------------
+Name consistency rate: 0.049
+Consistent groups: 2/41
+
+Overall Stability Assessment
+------------------------------
+Stability score: FAIL (≥0.7)
+Volume correlation: FAIL (≥0.6)
+Name consistency: FAIL (≥0.8)
+
+Overall: UNSTABLE ONTOLOGY

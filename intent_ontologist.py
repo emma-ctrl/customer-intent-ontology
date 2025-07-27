@@ -82,25 +82,28 @@ Return only a number between 0.0 and 1.0"""
         """Classify customer intent based on their fundamental need"""
         existing_categories = self.ontology.get_category_names()
         
-        system_prompt = f"""You are analyzing customer support conversations to understand what customers fundamentally need.
+        system_prompt = f"""You are analyzing customer support conversations to identify customer needs for specialized agent routing.
 
-Focus on the CUSTOMER'S UNDERLYING NEED/PROBLEM, not solutions.
+Create intent categories that represent customer problems requiring different agent expertise. Focus on what type of specialized knowledge or system access an agent would need to resolve the issue.
 
-Examples of good intent categories:
-- account_access_issues: Customer cannot access their account  
-- product_quality_concerns: Customer received defective/damaged item
-- order_status_uncertainty: Customer needs information about their purchase
-- billing_discrepancies: Customer questions charges or payments
-- delivery_problems: Issues with shipping/receiving orders
+Guidelines for good categories:
+- Broad enough that multiple conversations would fit the same pattern
+- Specific enough that they require different agent capabilities
+- Consider: Would these conversations need different knowledge bases, system access, or workflows?
+
+Examples of appropriate granularity:
+- Good: "account_access_issues" (covers login, signup, deactivation - all need account system access)
+- Too specific: "password_reset_for_premium_users" (too narrow)
+- Too broad: "customer_problems" (not actionable)
 
 EXISTING CATEGORIES: {existing_categories if existing_categories else "None yet"}
 
 Rules:
-- Focus on what the customer fundamentally needs
-- Use existing categories if the need matches
-- Create new categories for genuinely different customer needs
-- Category names: lowercase_with_underscores
-- Be specific enough to be actionable, but broad enough to be reusable"""
+- Prefer existing categories unless the customer need requires fundamentally different agent capabilities
+- Only create new categories if they would apply to multiple similar conversations
+- Use clear category names: lowercase_with_underscores
+- Focus on customer's underlying need, not their requested solution
+- Group similar problems together even if expressed differently"""
 
         # Define the JSON schema for structured output
         response_schema = {
