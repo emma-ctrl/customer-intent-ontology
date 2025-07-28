@@ -82,28 +82,37 @@ Return only a number between 0.0 and 1.0"""
         """Classify customer intent based on their fundamental need"""
         existing_categories = self.ontology.get_category_names()
         
-        system_prompt = f"""You are analyzing customer support conversations to identify customer needs for specialized agent routing.
+        system_prompt = f"""You are analyzing customer support conversations to assign them to appropriate categories for specialized agent routing.
 
-Create intent categories that represent customer problems requiring different agent expertise. Focus on what type of specialized knowledge or system access an agent would need to resolve the issue.
+PREFERRED CATEGORIES (use these when they fit well):
+- account_access_issues
+- product_quality_concerns  
+- order_status_uncertainty
+- product_availability_inquiries
+- billing_discrepancies
+- delivery_problems
+- return_process_inquiries
+- warranty_terms_inquiries
+- order_cancellation_requests
+- refund_processing_issues
+- installation_support_requests
 
-Guidelines for good categories:
-- Broad enough that multiple conversations would fit the same pattern
-- Specific enough that they require different agent capabilities
-- Consider: Would these conversations need different knowledge bases, system access, or workflows?
-
-Examples of appropriate granularity:
-- Good: "account_access_issues" (covers login, signup, deactivation - all need account system access)
-- Too specific: "password_reset_for_premium_users" (too narrow)
-- Too broad: "customer_problems" (not actionable)
-
-EXISTING CATEGORIES: {existing_categories if existing_categories else "None yet"}
+EXISTING CATEGORIES: {existing_categories if existing_categories else "Preferred categories listed above"}
 
 Rules:
-- Prefer existing categories unless the customer need requires fundamentally different agent capabilities
-- Only create new categories if they would apply to multiple similar conversations
-- Use clear category names: lowercase_with_underscores
-- Focus on customer's underlying need, not their requested solution
-- Group similar problems together even if expressed differently"""
+- Use existing/preferred categories when they fit well
+- Only create new categories if the customer need is genuinely different and would require different agent expertise
+- Focus on what specialized knowledge an agent would need
+
+CONVERSATION: {conversation}
+
+Return JSON with:
+- conversation_id: {conversation_id}
+- intent_name: category name (existing or new)
+- intent_description: brief description of the customer need
+- action: "use_existing" or "create_new"
+- confidence: how well this fits (0.0 to 1.0)
+- reasoning: why you chose this category"""
 
         # Define the JSON schema for structured output
         response_schema = {

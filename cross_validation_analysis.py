@@ -8,7 +8,7 @@ from scipy.stats import spearmanr
 import sys
 sys.path.append('.')
 from intent_ontologist import IntentOntologist
-from models.intent_models import IntentCategory
+from models.intent_models import IntentCategory, IntentClassification, IntentAction
 
 class CrossValidationAnalyzer:
     def __init__(self, conversations_file: str = "data/conversations.txt", n_folds: int = 3):
@@ -61,8 +61,8 @@ class CrossValidationAnalyzer:
         print(f"Created {self.n_folds} folds with sizes: {[len(split) for split in splits]}")
         return splits
 
-    def run_intent_discovery_on_split(self, split_conversations: List[Dict], split_id: int) -> List[IntentCategory]:
-        """Run intent discovery on a single split"""
+    def run_intent_discovery_on_split(self, split_conversations: List[Dict], split_id: int) -> Tuple[List[IntentCategory], List[IntentClassification]]:
+        """Run intent discovery on a single split, return both categories and classifications"""
         print(f"Running intent discovery on split {split_id + 1}...")
         
         # Create temporary file for this split
@@ -73,14 +73,14 @@ class CrossValidationAnalyzer:
         
         # Run intent discovery
         ontologist = IntentOntologist(temp_file)
-        ontologist.build_ontology()
+        classifications = ontologist.build_ontology()
         
         # Clean up temp file
         import os
         os.remove(temp_file)
         
         print(f"Split {split_id + 1}: Found {len(ontologist.ontology.categories)} categories")
-        return ontologist.ontology.categories
+        return ontologist.ontology.categories, classifications
 
     def calculate_intent_stability_score(self, all_split_categories: List[List[IntentCategory]]) -> Dict:
         """Calculate intent stability across splits"""
@@ -214,7 +214,45 @@ class CrossValidationAnalyzer:
             'consistent_groups': consistent_groups
         }
 
-    def generate_cross_validation_report(self, stability_analysis: Dict, volume_analysis: Dict, consistency_analysis: Dict) -> str:
+    def calculate_basic_metrics(self, all_classifications: List[IntentClassification]) -> Dict:
+        """Calculate basic evaluation metrics across all classifications"""
+        if not all_classifications:
+            return {
+                'total_conversations': 0,
+                'average_confidence': 0.0,
+                'category_reuse_rate': 0.0,
+                'low_confidence_rate': 0.0,
+                'intent_volume_distribution': {}
+            }
+        
+        # Calculate metrics
+        total_conversations = len(all_classifications)
+        
+        # Average confidence
+        confidence_scores = [classification.confidence for classification in all_classifications]
+        average_confidence = sum(confidence_scores) / len(confidence_scores)
+        
+        # Category reuse rate
+        reuse_count = sum(1 for classification in all_classifications 
+                         if classification.action == IntentAction.USE_EXISTING)
+        category_reuse_rate = reuse_count / total_conversations
+        
+        # Low confidence rate
+        low_confidence_count = sum(1 for score in confidence_scores if score < 0.6)
+        low_confidence_rate = low_confidence_count / total_conversations
+        
+        # Intent volume distribution
+        intent_counter = Counter(classification.intent_name for classification in all_classifications)
+        
+        return {
+            'total_conversations': total_conversations,
+            'average_confidence': average_confidence,
+            'category_reuse_rate': category_reuse_rate,
+            'low_confidence_rate': low_confidence_rate,
+            'intent_volume_distribution': dict(intent_counter)
+        }
+
+    def generate_cross_validation_report(self, stability_analysis: Dict, volume_analysis: Dict, consistency_analysis: Dict, basic_metrics: Dict) -> str:
         """Generate comprehensive cross-validation report"""
         lines = []
         lines.append("Cross-Validation Analysis Report")
@@ -254,6 +292,22 @@ class CrossValidationAnalyzer:
         lines.append(f"Name consistency rate: {consistency_analysis['consistency_rate']:.3f}")
         lines.append(f"Consistent groups: {consistency_analysis['consistent_groups']}/{consistency_analysis['total_groups']}")
         
+        # Basic Metrics
+        lines.append(f"\nBasic Metrics")
+        lines.append("-" * 15)
+        lines.append(f"Total conversations processed: {basic_metrics['total_conversations']}")
+        lines.append(f"Average confidence: {basic_metrics['average_confidence']:.3f}")
+        lines.append(f"Category reuse rate: {basic_metrics['category_reuse_rate']:.3f}")
+        lines.append(f"Low confidence rate (<0.6): {basic_metrics['low_confidence_rate']:.3f}")
+        
+        # Top intent categories by volume
+        if basic_metrics['intent_volume_distribution']:
+            lines.append(f"\nTop intent categories by volume:")
+            sorted_intents = sorted(basic_metrics['intent_volume_distribution'].items(), 
+                                  key=lambda x: x[1], reverse=True)
+            for intent, volume in sorted_intents[:10]:  # Show top 10
+                lines.append(f"  {intent}: {volume} conversations")
+        
         # Overall Assessment
         lines.append(f"\nOverall Stability Assessment")
         lines.append("-" * 30)
@@ -290,17 +344,20 @@ class CrossValidationAnalyzer:
         
         # Run intent discovery on each split
         all_split_categories = []
+        all_classifications = []
         for i, split in enumerate(splits):
-            categories = self.run_intent_discovery_on_split(split, i)
+            categories, classifications = self.run_intent_discovery_on_split(split, i)
             all_split_categories.append(categories)
+            all_classifications.extend(classifications)
         
-        # Calculate stability metrics
+        # Calculate all analysis metrics
         stability_analysis = self.calculate_intent_stability_score(all_split_categories)
         volume_analysis = self.calculate_volume_correlation(all_split_categories)
         consistency_analysis = self.analyze_intent_name_consistency(all_split_categories)
+        basic_metrics = self.calculate_basic_metrics(all_classifications)
         
         # Generate report
-        report = self.generate_cross_validation_report(stability_analysis, volume_analysis, consistency_analysis)
+        report = self.generate_cross_validation_report(stability_analysis, volume_analysis, consistency_analysis, basic_metrics)
         print("\n" + report)
         
         # Save report
@@ -311,7 +368,8 @@ class CrossValidationAnalyzer:
         return {
             'stability_analysis': stability_analysis,
             'volume_analysis': volume_analysis,
-            'consistency_analysis': consistency_analysis
+            'consistency_analysis': consistency_analysis,
+            'basic_metrics': basic_metrics
         }
 
 if __name__ == "__main__":
