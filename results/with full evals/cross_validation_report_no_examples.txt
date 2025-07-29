@@ -1,0 +1,99 @@
+Cross-Validation Analysis Report
+==================================================
+
+Intent Stability Analysis
+------------------------------
+Total unique intents across all splits: 44
+Common intents (appear in all splits): 1
+Stability score: 0.060
+Average intents per split: 16.7
+Split intent counts: [6, 16, 28]
+
+Stable intents (all splits):
+  - product_defect
+
+Intent frequency across splits:
+  product_defect: 3/3 splits
+  order_delivery_issue: 2/3 splits
+  account_access_issue: 2/3 splits
+  order_tracking_issue: 2/3 splits
+  refund_processing_delay: 2/3 splits
+  payment_dispute: 1/3 splits
+  product_availability: 1/3 splits
+  order_cancellation: 1/3 splits
+  product_access_issue: 1/3 splits
+  account_deactivation: 1/3 splits
+  warranty_information_request: 1/3 splits
+  order_cancellation_request: 1/3 splits
+  product_availability_issue: 1/3 splits
+  pickup_location_change_request: 1/3 splits
+  shipping_delay_issue: 1/3 splits
+  address_update_request: 1/3 splits
+  payment_method_availability_issue: 1/3 splits
+  shipping_combination_issue: 1/3 splits
+  product_return_request: 1/3 splits
+  product_exchange_offer_request: 1/3 splits
+  billing_discrepancy: 1/3 splits
+  account_reactivation_issue: 1/3 splits
+  cashback_offer_clarity: 1/3 splits
+  exchange_offer_clarity: 1/3 splits
+  price_change_confusion: 1/3 splits
+  warranty_claim_issue: 1/3 splits
+  order_cancellation_issue: 1/3 splits
+  installation_instructions_clarity: 1/3 splits
+  international_number_verification_issue: 1/3 splits
+  account_creation_issue: 1/3 splits
+  order_processing_delay: 1/3 splits
+  warranty_terms_clarity: 1/3 splits
+  order_return_issue: 1/3 splits
+  product_quality_issue: 1/3 splits
+  invoice_request_issue: 1/3 splits
+  return_policy_confusion: 1/3 splits
+  delivery_charge_clarity: 1/3 splits
+  reward_points_redemption_issue: 1/3 splits
+  international_shipping_option_issue: 1/3 splits
+  return_fee_clarity: 1/3 splits
+  order_availability_issue: 1/3 splits
+  payment_option_clarity: 1/3 splits
+  product_accessory_clarity: 1/3 splits
+  order_address_change_issue: 1/3 splits
+
+Volume Correlation Analysis
+------------------------------
+Average Spearman correlation: -0.700
+
+Pairwise correlations:
+  Splits 1-3: r=-1.000 (p=1.000)
+  Splits 2-3: r=-0.400 (p=0.600)
+
+Intent Name Consistency Analysis
+-----------------------------------
+Name consistency rate: 0.034
+Consistent groups: 1/29
+
+Basic Metrics
+---------------
+Total conversations processed: 472
+Average confidence: 0.946
+Category reuse rate: 0.888
+Low confidence rate (<0.6): 0.000
+
+Top intent categories by volume:
+  product_defect: 78 conversations
+  order_delivery_issue: 54 conversations
+  product_access_issue: 46 conversations
+  product_return_request: 30 conversations
+  account_access_issue: 28 conversations
+  order_tracking_issue: 21 conversations
+  refund_processing_delay: 19 conversations
+  payment_dispute: 16 conversations
+  shipping_delay_issue: 16 conversations
+  product_availability_issue: 13 conversations
+
+Overall Stability Assessment
+------------------------------
+Stability score: FAIL (≥0.7)
+Volume correlation: FAIL (≥0.6)
+Name consistency: FAIL (≥0.8)
+
+Overall: UNSTABLE ONTOLOGY
